@@ -1,0 +1,100 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 215.22 56.1% 16.08%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 204 49% 62%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 56.14 98.31% 46.47%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 215 56% 16%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 215.22 56.1% 12.08%;
+    --foreground: 210 40% 98%;
+
+    --card: 215.22 56.1% 12.08%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 215.22 56.1% 12.08%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 204 59% 72%;
+    --primary-foreground: 204 49% 8%;
+
+    --secondary: 56.14 98.31% 46.47%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    font-family: 'Noto Sans', sans-serif;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  .chat > div > div {
+    @apply text-foreground/70;
+  }
+  .chat > div > div > *:not(:last-child) {
+    @apply mb-2;
+  }
+  .chat > div > div > ul {
+    @apply list-disc ml-6;
+  }
+  .chat .highlight {
+    @apply bg-primary text-primary-foreground px-1 rounded font-semibold;
+  }
+  .chat h3 {
+    @apply text-xl font-semibold text-primary;
+  }
+  .chat h3:not(:first-child) {
+    @apply mt-2 mb-1 text-primary;
+  }
+  .chat h4 {
+    @apply text-lg font-semibold text-primary;
+  }
+}
