@@ -63,27 +63,28 @@ def generate_content(results, images=[]):
       "metric_image_descriptions": []
     }}
     
-    - title: A string that represents the title of the report.
-    - subtitle: A string that represents the subtitle of the report.
-    - introduction: A string that represents the introduction of the report. It should explain the report and its purpose from a business perspective. It should also summarize the key insights and findings from the analysis.
-    - coefficients: String containing a list of the coefficients of the model and an explanation of their meaning and relevance to the analysis.
-    - metrics: String containing a list of the used metrics and an explanation of their meaning and relevance to the analysis.
+    title: A concise and informative string (4-8 words) representing the title of the report.
+    subtitle: A brief string (6-18 words) representing the subtitle of the report.
+    introduction: HTML-formatted text summarizing the report's purpose, findings, relevance to the business context, explanations for technical terms used within the report, interpretations of coefficients in the model, and explanations of metrics within context, including comparisons to examples or common values. It should encompass all information in approximately 3-4 paragraphs, presented in an easy-to-read and understand manner.
+    coefficients: HTML-formatted list presenting model coefficients, their interpretations, and examples to aid understanding.
+    metrics: HTML-formatted paragraph summarizing metrics, explaining their values within context, and comparing them to examples or common values.
+    metric_image_descriptions: Short descriptions explaining the main characteristics of the provided images.
     
-    Follow the guidelines below to fill in the values:
-    - Use html tags to format the text within the strings for introduction and metrics.
-    - Ensure that the title and subtitle are concise and informative.
-    - Provide a clear and concise introduction that explains the purpose of the report and its relevance to the business context.
-    - Keep the metrics and coefficients section short, clear, and relevant to the analysis. Dont add an heading. Only the metrics or coefficients itself in form of an list.
-    - Shorten numbers to 3 decimal places.
-    - Use unordered lists for the metrics and coefficients.
-    - Highlight bullet-point titles by making them bold.
-    - Wrap numbers in <span class="number"></span> tags to style them as code.
-    - Use UTF-8 encoding for special characters.
-    - Explain everything from a business perspective and avoid technical terms. The audience is non-technical.
-    - Use the images provided and explain them in metric_image_descriptions. Keep the explaination short and only focus on the main characteristic. Highlight how the data in the image differs from the other images.
-    
-    Very important: Following the structure of the json for the answer and the guidelines is very important. Please follow them strictly.
-    Make sure to not add any special characters or line breaks to the json object.
+    Guidelines:
+    Use HTML tags for formatting in the introduction, coefficients, and metrics.
+    Maintain concise and clear titles and subtitles.
+    Provide a business-oriented introduction explaining the report's purpose and relevance.
+    Include explanations for technical terms used within the report.
+    Present coefficients in a list format with easy-to-understand interpretations and examples.
+    Summarize metrics in a paragraph, explaining their values within context and comparing them to examples or common values.
+    Keep the coefficients and metrics sections short, clear, and pertinent to the analysis. Use unordered lists for clarity.
+    Limit numerical values to three decimal places.
+    Highlight bullet-point titles in bold.
+    Wrap numbers in <span class="number"></span> tags for styling.
+    Utilize UTF-8 encoding for special characters.
+    Present explanations from a non-technical, business perspective.
+    Describe images briefly, focusing on key differences from other images.
+    Following the JSON structure and guidelines strictly is crucial. Ensure no special characters or line breaks are added to the JSON object.
     
   """
 
