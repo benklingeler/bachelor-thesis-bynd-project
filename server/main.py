@@ -152,7 +152,7 @@ def get_reports():
 
 
 @app.get("/report/{report_id}")
-def get_report(report_id: int):
+def get_single_report_pdf(report_id: int):
     db = sqlite3.connect("db.sqlite3")
 
     cursor = db.cursor()
