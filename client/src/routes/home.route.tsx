@@ -36,7 +36,7 @@ export function Component() {
                 <Tooltip>
                   <TooltipTrigger>
                     <a
-                      href={`http://localhost:8000/report/${report.id}`}
+                      href={`http://localhost:8000/report/${report.label}`}
                       className='flex items-center justify-center'
                       target='_blank'
                     >

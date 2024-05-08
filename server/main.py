@@ -151,12 +151,12 @@ def get_reports():
     return clean_reports
 
 
-@app.get("/report/{report_id}")
-def get_single_report_pdf(report_id: int):
+@app.get("/report/{label}")
+def get_single_report_pdf(label: str):
     db = sqlite3.connect("db.sqlite3")
 
     cursor = db.cursor()
-    cursor.execute("SELECT * FROM reports WHERE id = ?", (report_id,))
+    cursor.execute("SELECT * FROM reports WHERE label = ?", (label,))
     report = cursor.fetchone()
 
     cursor.close()
@@ -164,8 +164,15 @@ def get_single_report_pdf(report_id: int):
     if report is None:
         return {"error": "Report not found"}, 404
 
+    filename = report[1].replace(" ", "_")
+    quoted_filename = f'filename="{filename}.pdf"'
+
     # Return the pdf file with respective content type
-    return Response(content=report[2], media_type="application/pdf")
+    return Response(
+        content=report[2],
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"inline; {quoted_filename}"},
+    )
 
 
 @app.post("/upload")
@@ -184,6 +191,9 @@ async def upload_report(
 
     with open(f"{filename}.pdf", "rb") as file:
         pdf = file.read()
+
+    # Remove pdf
+    os.remove(f"{filename}.pdf")
 
     db = sqlite3.connect("db.sqlite3")
 

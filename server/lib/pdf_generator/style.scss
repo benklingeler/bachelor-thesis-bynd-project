@@ -179,10 +179,12 @@ header {
     margin-top: 0.4rem;
     height: min-content;
     table-layout: fixed;
+    vertical-align: top;
 
     tr,
     td {
       height: min-content;
+      vertical-align: top;
 
       img {
         width: 100%;
@@ -213,10 +215,7 @@ header {
 }
 
 .center-vertically {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+  vertical-align: middle !important;
 }
 #toc {
   ul {

@@ -1,4 +1,5 @@
 import base64
+from datetime import datetime
 import json
 import pdfkit
 from pathlib import Path
@@ -60,7 +61,13 @@ def generate_content(results, images=[]):
       "introduction": "",
       "coefficients": "",
       "metrics": "",
-      "metric_image_descriptions": []
+      "metric_image_descriptions": [],
+      "section_titles": {{
+        "main": "",
+        "coefficients"; "",
+        "metrics": "",
+        "model_performance": ""
+      }}
     }}
     
     title: A concise and informative string (4-8 words) representing the title of the report.
@@ -69,6 +76,11 @@ def generate_content(results, images=[]):
     coefficients: HTML-formatted list presenting model coefficients, their interpretations, and examples to aid understanding.
     metrics: HTML-formatted paragraph summarizing metrics, explaining their values within context, and comparing them to examples or common values.
     metric_image_descriptions: Short descriptions explaining the main characteristics of the provided images.
+    section_titles:
+      main: A concise and informative string (4-8 words) representing the title of the main section. Example: "OVERVIEW OF ATTRIBUTES AND THEIR IMPACT ON SALES"
+      coefficients: A concise and informative string (4-8 words) representing the title of the coefficients section. Example: "Impact of Different Media on Sales"
+      metrics: A concise and informative string (4-8 words) representing the title of the metrics section. Example: "Visual Insights"
+      model_performance: A concise and informative string (4-8 words) representing the title of the model performance section. Example: "Model PerformanceIndicators"
     
     Guidelines:
     Use HTML tags for formatting in the introduction, coefficients, and metrics.
@@ -149,7 +161,9 @@ def generate_pdf(filename, results):
     )
     content = json.loads(raw_content.replace("\n", ""))
 
-    plots_html = f""""""
+    print(content)
+
+    plots_html = ""
 
     for i in range(len(plots)):
         plot = plots[i]
@@ -159,6 +173,8 @@ def generate_pdf(filename, results):
           <p class="small">{content["metric_image_descriptions"][i]}</p>
         </td>
       """
+
+    date = datetime.now().strftime("%d.%m.%Y")
 
     body = f"""
       <html>
@@ -171,7 +187,7 @@ def generate_pdf(filename, results):
             <img src="{load_image('/images/bynd-logo-white.png', 'png')}" width="120" />
             <h1>{content["title"]}</h1>
             <h2>{content["subtitle"]}</h2>
-            <p>06.05.2024</p>
+            <p>{date}</p>
           </header>
           <div class="main">
             <section id="intro">
@@ -182,7 +198,9 @@ def generate_pdf(filename, results):
             <section id="toc">
               <h3>Table of Contents</h3>
               <ul>
-                <li><a href="#coefficients">Impact of Different Media on Sales</a></li>
+                <li><a href="#coefficients">{content["section_titles"]["coefficients"]}</a></li>
+                <li><a href="#metrics">{content["section_titles"]["metrics"]}</a></li>
+                <li><a href="#model_performance">{content["section_titles"]["model_performance"]}</a></li>
                 <li><a href="#warning">AI Warning</a></li>
               </ul>
             </section>
@@ -194,28 +212,26 @@ def generate_pdf(filename, results):
             <h2>{content["subtitle"]}</h2>
           </header>
           <div class="main">
-            <h3>Overview of Attributes and Their Impact on Sales</h3>
-            <h4 id="coefficients">Impact of Different Media on Sales</h4>
+            <h3>{content["section_titles"]["main"]}</h3>
+            <h4 id="coefficients">{content["section_titles"]["coefficients"]}</h4>
             <table width="100%" border="0" cellpadding="0px" cellspacing="16px">
-              <tr>
-                <td>
+              <tr class="center-vertically">
+                <td class="center-vertically">
                   <img src="data:image/png;base64,{coefficients_bar}" width="100%"/>
                 </td>
-                <td class="">
-                  <div class="center-vertically">
-                    {content["coefficients"].replace("ul>", "div>").replace("li>", "p>").replace("-", "")}
-                  </div>
+                <td class="center-vertically">
+                    {content["coefficients"]}
                 </td>
               </tr>
             </table>
-            <h4>Visual Insights</h4>
+            <h4 id="metrics">{content["section_titles"]["metrics"]}</h4>
             <table width="100%" border="0" cellpadding="0px" cellspacing="16px">
               <tr>
                 {plots_html}
               </tr>
             </table>
             
-            <h4>Model Performance Indicators</h4>
+            <h4 id="model_performance">{content["section_titles"]["model_performance"]}</h4>
             {content["metrics"]}
             
             <section id="warning">

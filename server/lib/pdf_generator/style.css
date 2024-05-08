@@ -158,11 +158,13 @@ header p {
   height: -moz-min-content;
   height: min-content;
   table-layout: fixed;
+  vertical-align: top;
 }
 .main table tr,
 .main table td {
   height: -moz-min-content;
   height: min-content;
+  vertical-align: top;
 }
 .main table tr img,
 .main table td img {
@@ -190,10 +192,7 @@ header p {
 }
 
 .center-vertically {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
+  vertical-align: middle !important;
 }
 
 #toc ul a {
