@@ -7,6 +7,7 @@ import openai
 import matplotlib.pyplot as plt
 from dotenv import load_dotenv
 import os
+from bs4 import BeautifulSoup
 
 load_dotenv("../.env")
 
@@ -15,15 +16,20 @@ client = openai.Client(
 )
 
 
+def get_bynd_color(index):
+    colors = ["#5B7F9E", "#A5C2E8", "#EBDC03", "#F69B00", "#AAC001"]
+    return colors[index % len(colors)]
+
+
 def load_image(image_path, image_type="jpeg"):
     image = Path("./lib/pdf_generator" + image_path).read_bytes()
     images_bytes = base64.b64encode(image).decode("utf-8")
     return f"data:image/{image_type};base64,{images_bytes}"
 
 
-def scatter_plot_bytes(x, y, xLabel="", yLabel=""):
+def scatter_plot_bytes(x, y, xLabel="", yLabel="", color="#6da7cd"):
     plt.clf()
-    plt.scatter(x, y, color="#6da7cd")
+    plt.scatter(x, y, color=color)
     plt.xlabel(xLabel)
     plt.ylabel(yLabel)
 
@@ -36,9 +42,15 @@ def scatter_plot_bytes(x, y, xLabel="", yLabel=""):
 
 def bar_plot_bytes(x, y, xLabel="", yLabel=""):
     plt.clf()
-    plt.bar(x, y, color="#6da7cd")
-    plt.xlabel(xLabel)
+    barlist = plt.bar(x, y, color="#6da7cd")
+
+    for i in range(len(barlist)):
+        bar = barlist[i]
+        bar.set_color(get_bynd_color(i))
+
     plt.ylabel(yLabel)
+    plt.xlabel(xLabel)
+    plt.gca().axes.get_xaxis().set_ticklabels([])
 
     plt.savefig("tmp.png")
     with open("tmp.png", "rb") as file:
@@ -73,7 +85,7 @@ def generate_content(results, images=[]):
     title: A concise and informative string (4-8 words) representing the title of the report.
     subtitle: A brief string (6-18 words) representing the subtitle of the report.
     introduction: HTML-formatted text summarizing the report's purpose, findings, relevance to the business context, explanations for technical terms used within the report, interpretations of coefficients in the model, and explanations of metrics within context, including comparisons to examples or common values. It should encompass all information in approximately 3-4 paragraphs, presented in an easy-to-read and understand manner.
-    coefficients: HTML-formatted list presenting model coefficients, their interpretations, and examples to aid understanding.
+    coefficients: HTML-formatted list presenting model coefficients, their interpretations, and examples to aid understanding. Wrap the coefficients in <b> tags for bold styling. Use <span class="number"></span> tags to style numerical values. Limit numerical values to three decimal places.
     metrics: HTML-formatted paragraph summarizing metrics, explaining their values within context, and comparing them to examples or common values.
     metric_image_descriptions: Short descriptions explaining the main characteristics of the provided images.
     section_titles:
@@ -92,7 +104,7 @@ def generate_content(results, images=[]):
     Keep the coefficients and metrics sections short, clear, and pertinent to the analysis. Use unordered lists for clarity.
     Limit numerical values to three decimal places.
     Highlight bullet-point titles in bold.
-    Wrap numbers in <span class="number"></span> tags for styling.
+    Wrap numbers in <span class="number"></span> tags for styling. Make sure to only wrap the number, not exceeding spaces or characters.
     Utilize UTF-8 encoding for special characters.
     Present explanations from a non-technical, business perspective.
     Describe images briefly, focusing on key differences from other images.
@@ -140,8 +152,9 @@ def generate_pdf(filename, results):
             results["data"][reference_metric],
             metric,
             reference_metric,
+            color=get_bynd_color(i),
         )
-        for metric in used_metrics
+        for i, metric in enumerate(used_metrics)
     ]
 
     coefficients_bar = bar_plot_bytes(
@@ -150,6 +163,8 @@ def generate_pdf(filename, results):
         None,
         reference_metric,
     )
+
+    coefficients_colors = [get_bynd_color(i) for i in range(len(used_metrics))]
 
     # with open("tmp_content.json", "r") as file:
     raw_content = generate_content(
@@ -164,7 +179,6 @@ def generate_pdf(filename, results):
     print(content)
 
     plots_html = ""
-
     for i in range(len(plots)):
         plot = plots[i]
         plots_html += f"""
@@ -173,6 +187,17 @@ def generate_pdf(filename, results):
           <p class="small">{content["metric_image_descriptions"][i]}</p>
         </td>
       """
+
+    # Color the coefficients
+    chtml = BeautifulSoup(content["coefficients"], "html.parser")
+    li_tags = chtml.find_all("li")
+    for i, li_tag in enumerate(li_tags):
+        b_tag = li_tag.find("b")
+        if b_tag:
+            b_tag["style"] = f"color: {get_bynd_color(i)};"
+    content["coefficients"] = str(chtml.prettify())
+
+    print(content["coefficients"])
 
     date = datetime.now().strftime("%d.%m.%Y")
 

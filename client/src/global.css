@@ -38,7 +38,7 @@
   }
 
   .dark {
-    --background: 215.22 56.1% 12.08%;
+    --background: 217 50% 7%;
     --foreground: 210 40% 98%;
 
     --card: 215.22 56.1% 12.08%;
@@ -76,9 +76,6 @@
   body {
     @apply bg-background text-foreground;
   }
-  .chat > div > div {
-    @apply text-foreground/70;
-  }
   .chat > div > div > *:not(:last-child) {
     @apply mb-2;
   }
@@ -96,5 +93,11 @@
   }
   .chat h4 {
     @apply text-lg font-semibold text-primary;
+  }
+  .chat img {
+    @apply my-4 w-1/2 mx-auto shadow-xl shadow-primary/20;
+  }
+  .chat code {
+    @apply text-primary bg-primary-foreground p-1 rounded font-semibold;
   }
 }
